@@ -8,11 +8,10 @@
 
 void error(const char *msg) { perror(msg); exit(0); }
 
-// curl http://127.0.0.1:9090/status
-//#define PORT 9090
 //unsigned char ip[4] = { 127, 0, 0, 1 };
 #define MAXMSGLEN 1024
-
+// Get integer value from json dictionary
+// Example: value = get_value_for_key(json, "key");
 int get_value_for_key(const char *json, const char *key)
 {
     char *key_ptr = strstr(json, key);
@@ -27,7 +26,7 @@ int get_value_for_key(const char *json, const char *key)
     avalue[numlen] = '\0';
     return atoi(avalue);
 }
-
+// Example: get_status_json("127.0.0.1", 8080, "status", resp);
 int get_status_json(const char *addr, int port, char *request, char *response)
 {
     char message[MAXMSGLEN];
@@ -79,19 +78,19 @@ int get_status_json(const char *addr, int port, char *request, char *response)
 
     return ret;
 }
-
+// Usage example:
 int main(int argc,char *argv[])
 {
     char json[MAXMSGLEN];
     int value;
 
-    int ret = get_status_json("127.0.0.1", 9090, "status", json);
+    int ret = get_status_json("127.0.0.1", 8080, "status", json);
     if (ret != 0) error("ERROR gettin json");
     printf("Body:\n%s\n", json);
 
-    value = get_value_for_key(json, "master_offset");
+    value = get_value_for_key(json, "age");
 
-    printf("\nmaster_offset value:\n%d\n", value);
+    printf("\nAge: %d\n", value);
 
     return 0;
 }
